@@ -8,6 +8,7 @@ import {
   ListToolsRequestSchema,
   McpError,
 } from "@modelcontextprotocol/sdk/types.js";
+import axios from "axios";
 
 class AdditionServer {
   constructor() {
@@ -58,20 +59,16 @@ class AdditionServer {
       if (name === "add_numbers") {
         const { a, b } = args;
 
-        if (typeof a !== "number" || typeof b !== "number") {
-          throw new McpError(
-            ErrorCode.InvalidParams,
-            "a와 b는 숫자여야 합니다"
-          );
-        }
-
-        const result = a + b;
+        const response = await axios.post("http://localhost:3000/add", {
+          a,
+          b,
+        });
         
         return {
           content: [
             {
               type: "text",
-              text: `${a} + ${b} = ${result}`,
+              text: JSON.stringify(response.data),
             },
           ],
         };
