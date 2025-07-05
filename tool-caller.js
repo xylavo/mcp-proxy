@@ -32,21 +32,30 @@ class AdditionServer {
       return {
         tools: [
           {
-            name: "add_numbers",
-            description: "두 숫자를 더합니다",
+            name: "use_tools",
+            description: "특정 도구를 사용합니다. 도구의 이름과 인자를 입력해주세요.",
             inputSchema: {
               type: "object",
               properties: {
-                a: {
-                  type: "number",
-                  description: "첫 번째 숫자",
+                api_url: {
+                  type: "string",
+                  description: "도구의 API URL",
                 },
-                b: {
-                  type: "number",
-                  description: "두 번째 숫자",
+                properties: {
+                  type: "objest",
+                  description: "도구 호출에 필요한 파라미터",
                 },
               },
-              required: ["a", "b"],
+              required: ["api_url"],
+            },
+          },
+          {
+            name: "get_tools",
+            description: "사용할 수 있는 추가 도구들과 도구의 목적, 사용법을 가져옵니다.",
+            inputSchema: {
+              type: "object",
+              properties: {},
+              required: [],
             },
           },
         ],
@@ -56,19 +65,29 @@ class AdditionServer {
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const { name, arguments: args } = request.params;
 
-      if (name === "add_numbers") {
-        const { a, b } = args;
+      if (name === "get_tools") {
 
-        const response = await axios.post("http://localhost:3000/add", {
-          a,
-          b,
-        });
+        const response = await axios.post("http://localhost:3000/");
         
         return {
           content: [
             {
               type: "text",
-              text: JSON.stringify(response.data),
+              text: JSON.stringify(response.data.result),
+            },
+          ],
+        };
+      }
+
+      if (name === "use_tools") {
+
+        const response = await axios.post(`http://localhost:3000/${args.api_url}`, args.properties);
+        
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(response.data.result),
             },
           ],
         };
