@@ -73,7 +73,7 @@ class AdditionServer {
           content: [
             {
               type: "text",
-              text: JSON.stringify(response.data.result),
+              text: JSON.stringify(response.data),
             },
           ],
         };
@@ -87,7 +87,7 @@ class AdditionServer {
           content: [
             {
               type: "text",
-              text: JSON.stringify(response.data.result),
+              text: JSON.stringify(response.data),
             },
           ],
         };
